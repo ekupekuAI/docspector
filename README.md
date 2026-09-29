@@ -10,7 +10,7 @@
 
 [![CI](https://github.com/ekupekuAI/docspector/actions/workflows/ci.yml/badge.svg)](https://github.com/ekupekuAI/docspector/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-372_passing-16a34a)](backend/tests)
-[![Release](https://img.shields.io/badge/release-v1.1.0-2563eb)](../../releases/latest)
+[![Release](https://img.shields.io/github/v/release/ekupekuAI/docspector?label=release&color=2563eb)](../../releases/latest)
 [![Platforms](https://img.shields.io/badge/runs_on-Windows_·_Linux_·_macOS-0b132b)](../../releases/latest)
 [![Offline](https://img.shields.io/badge/network-127.0.0.1_only-374151)](#-trust-model)
 
