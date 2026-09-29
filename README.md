@@ -1,128 +1,156 @@
-# Docspector
+<div align="center">
 
-## Inspect. Verify. Trust.
+# 🛡️ DOCSPECTOR
 
-Docspector is an application-level **tamper-evident document versioning and custody-assurance platform** for synthetic legal and investigation workflows.
+<img src="https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&weight=700&size=24&duration=2600&pause=700&color=2563EB&center=true&vCenter=true&width=640&height=52&lines=Inspect.+Verify.+Trust.;Every+version.+Every+handover.+Provable.;SHA-256+%2B+hash-chained+custody+ledger;Break+the+file+%E2%86%92+break+the+chain+%E2%86%92+get+caught" alt="Inspect. Verify. Trust." />
 
-> **Smart India Hackathon** — Problem Statement **SIH26190 (MHA)** · Theme: Blockchain & Cybersecurity · Local / intranet / air-gapped deployment · Synthetic data only.
+[![SIH 2026](https://img.shields.io/badge/Smart_India_Hackathon-SIH26190-0b132b?style=for-the-badge)](https://sih.gov.in)
+[![MHA](https://img.shields.io/badge/Ministry_of_Home_Affairs-MHA-1d4ed8?style=for-the-badge)](#)
+[![Theme](https://img.shields.io/badge/Theme-Blockchain_%26_Cybersecurity-2563eb?style=for-the-badge)](#)
+
+[![CI](https://github.com/ekupekuAI/docspector/actions/workflows/ci.yml/badge.svg)](https://github.com/ekupekuAI/docspector/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-372_passing-16a34a)](backend/tests)
+[![Release](https://img.shields.io/badge/release-v1.1.0-2563eb)](../../releases/latest)
+[![Platforms](https://img.shields.io/badge/runs_on-Windows_·_Linux_·_macOS-0b132b)](../../releases/latest)
+[![Offline](https://img.shields.io/badge/network-127.0.0.1_only-374151)](#-trust-model)
+
+### A digital evidence file changed hands five times before it reached court.<br/>Can you prove nobody touched it? **Docspector can.**
+
+<br/>
+
+[![Download for Windows](https://img.shields.io/badge/⬇%C2%A0%C2%A0DOWNLOAD_FOR_WINDOWS-.exe_·_21_MB-2563eb?style=for-the-badge)](../../releases/latest/download/Docspector-windows-x64.exe)
+[![Download for Linux](https://img.shields.io/badge/⬇%C2%A0%C2%A0LINUX-binary-0b132b?style=for-the-badge&logo=linux&logoColor=white)](../../releases/latest/download/Docspector-linux-x64)
+[![Download for macOS](https://img.shields.io/badge/⬇%C2%A0%C2%A0MACOS-Apple_Silicon-0b132b?style=for-the-badge&logo=apple&logoColor=white)](../../releases/latest/download/Docspector-macos-arm64)
+
+**One file. Double-click. Browser opens. Done.**<br/>
+No Python. No Node. No installer. No internet. Demo case and users come pre-seeded.
+
+</div>
 
 ---
 
-## Quick start (no installation)
+## ⚡ 60-second tour
 
-**Nothing to install — no Python, no Node, no zip extraction.**
+| # | Do this | Watch this happen |
+|---|---------|-------------------|
+| 1 | Log in as `docspector.io` (Investigating Officer) | Role-scoped workstation loads |
+| 2 | Open case `HYD-CYB-2026-0147`, upload a PDF | SHA-256 fingerprint + `DOCUMENT_INGESTED` ledger event |
+| 3 | Request transfer to the Legal Reviewer | Reviewer stays **locked out** while pending |
+| 4 | Switch to `docspector.so` (account menu) and approve | Access granted for **that exact version only** |
+| 5 | Hit **Simulate Cyber Attack** (demo mode) | Bytes on disk get silently flipped |
+| 6 | Run **Verify** | ❌ Hash mismatch → version `RESTRICTED` → alert raised |
+| 7 | Open the custody timeline | The full chain — with the broken link exposed |
 
-1. Download the single-file app for your OS from [**Releases**](../../releases/latest):
-   - `Docspector-windows-x64.exe` (Windows 10/11)
-   - `Docspector-linux-x64` (Linux)
-   - `Docspector-macos-arm64` (macOS, Apple Silicon)
-2. Double-click it (on Linux/macOS: `chmod +x Docspector-* && ./Docspector-*`).
-3. Your browser opens at `http://127.0.0.1:8000` with the demo case and four synthetic users already seeded.
+Demo logins: `docspector.io` · `docspector.so` · `docspector.legal` · `docspector.auditor` — no passwords, all data synthetic.
 
-| Demo login | Role |
-|---|---|
-| `docspector.io` | Investigation Officer |
-| `docspector.so` | Supervising Officer |
-| `docspector.legal` | Legal Reviewer |
-| `docspector.auditor` | Audit Officer |
+## 🔁 How it works
 
-Everything runs locally on `127.0.0.1` — matching the PRD's local/air-gapped target. App data (SQLite database, file storage, generated JWT secret) lives in `%LOCALAPPDATA%\Docspector` (Windows) or `~/.local/share/docspector` (Linux/macOS).
+```mermaid
+flowchart LR
+    U["📄 Upload"] --> V["🧪 Validate<br/>type · size · magic bytes"]
+    V --> H["#️⃣ SHA-256<br/>fingerprint"]
+    H --> S[("🔒 Immutable<br/>version store")]
+    S --> L["⛓️ Custody ledger<br/>hash-chained event"]
+    L --> C{"🔍 Verify"}
+    C -->|hashes match| OK["✅ VALID"]
+    C -->|any mismatch| R["🚫 RESTRICTED + 🚨 alert"]
+```
 
-> Windows SmartScreen may warn because the binary is unsigned — choose **More info → Run anyway**. On machines with **Smart App Control** enabled, run from source instead (below).
+Every custody event seals the hash of the event before it — starting from `GENESIS`. Edit, delete, or reorder anything and every later link shatters:
 
-## What Docspector does
+```mermaid
+flowchart LR
+    G(["GENESIS"]) --> E1["event 1"] --> E2["event 2"] --> E3["event 3"] --> E4["…"]
+```
 
-- Register synthetic case documents (PDF / PNG / TXT, ≤ 25 MB) with **SHA-256 integrity hashes**
-- **Append-only immutable versioning** — prior versions are never overwritten
-- **Version-scoped transfer approval** (IO requests → SO approves/rejects/revokes)
-- **Per-case hash-chained custody ledger** with genesis anchoring and fork detection
-- On-demand **file + chain integrity verification**; failures restrict the version and raise independent alerts
-- **Tamper Injection Simulator** (explicit demo mode only) for live hash-mismatch demonstrations
-- Custody timeline and Technical Integrity Report
+Versions are **append-only**: a new upload never overwrites the old one, so “which version did the reviewer actually see?” always has one answer.
 
-## Important limitations
+## 👮 Who can do what
 
-Docspector does **not**:
+| Capability | IO | SO | Legal Reviewer | Auditor |
+|---|:---:|:---:|:---:|:---:|
+| View assigned cases | ✅ | ✅ | ✅ | ✅ |
+| Upload versions | ✅ | ❌ | ❌ | ❌ |
+| Request transfer | ✅ | ✅ | ❌ | ❌ |
+| Approve / revoke transfer | ❌ | ✅ | ❌ | ❌ |
+| Download content | ✅ | ✅ | approved version only | ❌ |
+| Verify integrity | ✅ | ✅ | approved version only | ✅ |
+| Review alerts | ❌ | ✅ | ❌ | read-only |
 
-- Prove that a document is truthful or genuine.
-- Prove that an uploader acted honestly.
-- Determine legal admissibility.
-- Provide absolute immutability.
-- Protect against a fully privileged host or database administrator who can rewrite local files and records.
+Deny-by-default. Every rule above is enforced in the **backend** — the UI is never the security boundary.
 
-Docspector provides application-level tamper evidence under a defined trust model. Only synthetic fictional data may be used.
+## 🧰 Stack
 
-## Technology
+<div align="center">
 
-| Layer | Stack |
-|---|---|
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS |
-| Backend | Python 3.10+, FastAPI, Pydantic v2 |
-| Persistence | SQLAlchemy 2.0, SQLite (FK enforced), Alembic migrations |
-| Security | Mock JWT auth, case-based RBAC, object-level authorization, SHA-256 hash-chained custody events |
-| Packaging | PyInstaller single-file executables via GitHub Actions (Windows / Linux / macOS) |
+<img src="https://skillicons.dev/icons?i=react,ts,vite,tailwind,py,fastapi,sqlite,githubactions" alt="React · TypeScript · Vite · Tailwind · Python · FastAPI · SQLite · GitHub Actions" />
 
-## Run from source (development)
+React 18 · TypeScript · Vite · Tailwind CSS &nbsp;|&nbsp; FastAPI · Pydantic v2 · SQLAlchemy 2.0 · Alembic &nbsp;|&nbsp; single-file builds via PyInstaller + CI
 
-Prerequisites: Python 3.10+ and Node.js 18+.
+</div>
+
+## 🔒 Hardening that's actually tested
+
+**372 automated tests** cover the parts that matter: RBAC and object-level authorization attacks, JWT tampering, hash-chain forgery (edits, deletions, forks, duplicate sequences), upload races, oversized/masquerading files, crash-safe upload cleanup, and a consistent API error contract with request IDs. Rate-limited login, security headers, and a 25 MB streaming cap round it out.
 
 ```bash
-# 1. Backend
+cd backend && pytest       # run them yourself
+```
+
+## 🖥️ Run from source
+
+<details>
+<summary><b>Development setup</b> (Python 3.10+ · Node 18+)</summary>
+
+```bash
+# backend
 cd backend
 python -m venv .venv
-.venv\Scripts\activate          # Windows   (Linux/macOS: source .venv/bin/activate)
+.venv\Scripts\activate            # Windows — Linux/macOS: source .venv/bin/activate
 pip install -r requirements.txt
-
-# 2. Frontend
-cd ../frontend
-npm ci
-```
-
-**Option A — one process (packaged-style):** build the UI once, then let the backend serve it:
-
-```bash
-cd frontend && npm run build
-cd ../backend && python desktop.py
-```
-
-**Option B — two dev servers (hot reload):**
-
-```bash
-# Terminal 1
-cd backend
 alembic upgrade head
 python scripts/seed_demo.py
-uvicorn app.main:app --reload          # http://127.0.0.1:8000
+uvicorn app.main:app --reload     # http://127.0.0.1:8000
 
-# Terminal 2
+# frontend (second terminal)
 cd frontend
-npm run dev                            # http://localhost:5173
+npm ci
+npm run dev                       # http://localhost:5173
 ```
 
-## Build the executable yourself
+Prefer one process? Build the UI once (`npm run build`), then `python backend/desktop.py` serves app + API together.
+
+</details>
+
+<details>
+<summary><b>Build the single-file executable</b></summary>
 
 ```bash
-python scripts/build_desktop.py        # output: backend/dist/Docspector(.exe)
+python scripts/build_desktop.py   # → backend/dist/Docspector(.exe)
 ```
 
-Tagged releases (`v*`) automatically build all three platform binaries via [GitHub Actions](.github/workflows/release.yml) and attach them to the release.
+Pushing a `v*` tag makes GitHub Actions build, smoke-test, and publish binaries for all three platforms automatically.
 
-## Tests
+</details>
 
-```bash
-cd backend && pytest        # 372 tests: auth, RBAC, hash chain, tampering, concurrency, API contract
-cd frontend && npm run build  # TypeScript strict typecheck + production build
-```
+## ⚖️ Trust model
 
-## Documentation
+Docspector gives you **application-level tamper evidence** for a local / intranet / air-gapped deployment. It deliberately does **not** claim to: prove a document is truthful, decide legal admissibility, provide absolute immutability, or survive a fully privileged host admin rewriting files and database together. Identities are synthetic demo accounts (mock JWT) — institutional identity integration is out of MVP scope. Stated limits are part of the design: an integrity tool that oversells itself is worthless in front of a court.
 
-- [Product Requirements Document](docs/Docspector_PRD.docx) (SIH26190 MVP)
-- [Threat model](docs/THREAT_MODEL.md)
-- [API error contract](docs/API_ERROR_CONTRACT.md)
-- [Test traceability](docs/TRACEABILITY.md)
-- [Demo limitations](docs/DEMO_LIMITATIONS.md)
-- [Backend details](backend/README.md)
+## 📚 Documentation
 
-## License
+| | |
+|---|---|
+| 📕 [Product Requirements (PRD)](docs/Docspector_PRD.docx) | 🎯 [Threat model](docs/THREAT_MODEL.md) |
+| 🧾 [API error contract](docs/API_ERROR_CONTRACT.md) | 🔗 [Requirement → test traceability](docs/TRACEABILITY.md) |
+| ⚠️ [Demo limitations](docs/DEMO_LIMITATIONS.md) | ⚙️ [Backend internals](backend/README.md) |
 
-See [LICENSE](LICENSE).
+---
+
+<div align="center">
+
+**Built for Smart India Hackathon 2026 · Problem Statement SIH26190 · Ministry of Home Affairs**
+
+Synthetic data only · [License](LICENSE)
+
+</div>
