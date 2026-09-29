@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic>=2,<3
+pydantic-settings>=2,<3
+python-dotenv
+pytest
+httpx
+SQLAlchemy>=2,<3
+alembic>=1,<2
+PyJWT>=2,<3
+python-multipart>=0.0.9

@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #0f172a;
+  background: #f8fafc;
+  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.focus-ring:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Base shadows and interactive cards */
+.shadow-soft {
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+}
+
+.card-interactive {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  border-color: #cbd5e1;
+}
+
+.card-interactive:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+}
+
+/* Page Entry Fade/Translate (180ms) */
+@keyframes pageEntry {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-entry {
+  animation: pageEntry 180ms ease-out forwards;
+}
+
+/* Timeline Stagger Entry */
+@keyframes timelineItemEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-timeline-item {
+  animation: timelineItemEnter 200ms ease-out forwards;
+}
+
+/* Modal and Overlay Animations */
+@keyframes modalBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContent {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-backdrop {
+  animation: modalBackdrop 160ms ease-out forwards;
+}
+
+.animate-modal-content {
+  animation: modalContent 180ms ease-out forwards;
+}
+
+/* Toast Notification Animation */
+@keyframes toastEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-toast {
+  animation: toastEnter 180ms ease-out forwards;
+}
+
+/* Restrained Alert Attention Entrance (1 cycle, no continuous flashing) */
+@keyframes alertAttention {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.005);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-alert-attention {
+  animation: alertAttention 220ms ease-out forwards;
+}
+
+/* Verification Restrained Success Entry */
+@keyframes verificationSuccessEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-success-enter {
+  animation: verificationSuccessEnter 200ms ease-out forwards;
+}
+
+/* Verification Security Event Entry */
+@keyframes verificationFailureEnter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-failure-enter {
+  animation: verificationFailureEnter 200ms ease-out forwards;
+}
+
+/* Table Row Hover */
+.table-row-hover {
+  transition: background-color 150ms ease-in-out;
+}
+
+/* Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .card-interactive:hover,
+  .card-interactive:active {
+    transform: none !important;
+  }
+
+  .animate-page-entry,
+  .animate-timeline-item,
+  .animate-modal-backdrop,
+  .animate-modal-content,
+  .animate-toast,
+  .animate-alert-attention,
+  .animate-success-enter,
+  .animate-failure-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

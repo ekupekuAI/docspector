@@ -1,0 +1,1 @@
+# Docspector scripts package
